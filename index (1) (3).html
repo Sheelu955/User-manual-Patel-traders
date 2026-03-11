@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Customer Vault User Manual | Patel Traders</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
+        
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: #f8fafc; 
+            color: #0f172a; 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
+        
+        .bg-grid { position: fixed; inset: 0; z-index: -2; background: #f8fafc; }
+        .bg-grid::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px); background-size: 30px 30px; z-index: -1; }
+        
+        .paper-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        
+        .step-circle { 
+            background: linear-gradient(135deg, #1d4ed8, #3b82f6); 
+            color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4); border: 3px solid #eff6ff; flex-shrink: 0; z-index: 10;
+        }
+
+        .step-line { position: absolute; left: 22px; top: 45px; bottom: -30px; width: 2px; background: rgba(37, 99, 235, 0.2); z-index: 0; }
+
+        .info-box { background: #ffffff; border-radius: 16px; padding: 25px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: 0.3s; }
+        .info-box:hover { border-color: rgba(96, 165, 250, 0.6); transform: translateX(5px); box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1); }
+
+        .btn-blue { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; font-weight: 800; text-transform: uppercase; border-radius: 12px; padding: 16px 24px; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: 1px;}
+        .btn-blue:hover { box-shadow: 0 15px 30px rgba(37, 99, 235, 0.4); transform: translateY(-2px); }
+        .btn-disabled { background: #cbd5e1 !important; box-shadow: none !important; color: #64748b !important; cursor: not-allowed !important; transform: none !important; }
+
+        .highlight { color: #2563eb; font-weight: 800; }
+        .warning-text { color: #d97706; font-weight: 800; }
+
+        .loader { border: 3px solid rgba(255, 255, 255, 0.3); border-top: 3px solid #ffffff; border-radius: 50%; width: 20px; height: 20px; animation: spin 0.8s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .lang-btn { padding: 6px 14px; border-radius: 8px; font-weight: bold; font-size: 12px; transition: 0.3s; cursor: pointer; border: none; }
+        .lang-active { background: #2563eb; color: white; box-shadow: 0 4px 15px rgba(37,99,235,0.4); }
+        .lang-inactive { background: #e2e8f0; color: #64748b; }
+        .lang-inactive:hover { background: #cbd5e1; color: #334155; }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+<div class="bg-grid"></div>
+
+<div class="max-w-4xl mx-auto relative z-10">
+    
+    <div class="flex justify-end mb-4">
+        <div class="bg-white p-1 rounded-xl border border-slate-200 flex gap-1 shadow-sm">
+            <button id="btn-hi" onclick="setLang('hi')" class="lang-btn lang-inactive">हिन्दी</button>
+            <button id="btn-en" onclick="setLang('en')" class="lang-btn lang-active">English</button>
+        </div>
+    </div>
+
+    <div id="pdf-capture-area" class="paper-card p-8 md:p-12 mb-10">
+        
+        <div class="text-center mb-12 border-b border-slate-200 pb-8">
+            <img id="biz-logo" src="https://i.ibb.co/wrSrs7K5/IMG-20260218-WA0001.jpg" alt="Logo" crossorigin="anonymous" class="w-24 h-24 mx-auto rounded-2xl border-2 border-blue-500 shadow-[0_10px_25px_rgba(37,99,235,0.2)] mb-5">
+            <h4 id="head-sub" class="text-blue-600 font-black uppercase tracking-[4px] text-[12px] mb-2">Digital Assistance Center</h4>
+            <h1 id="head-title" class="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-4">Customer User Manual</h1>
+            <p id="head-desc" class="text-slate-500 text-sm md:text-base max-w-2xl mx-auto font-medium leading-relaxed">Welcome to the Patel Traders Secure 'Digital Vault'. A comprehensive, step-by-step guide to operating your account is provided below.</p>
+        </div>
+        
+        <div id="content-en" class="space-y-8 relative">
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">1</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">How to Create an Account (Registration)</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">If you are transacting with Patel Traders for the first time, establishing a secure vault is mandatory for future billing.</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold list-disc list-inside">
+                        <li>Open the official website and click the <span class="highlight">"Access Secure Vault"</span> button.</li>
+                        <li>Navigate to the <span class="highlight">"Register"</span> tab on the login screen.</li>
+                        <li>Accurately input your Full Name, Active Email ID, and 10-digit Mobile Number.</li>
+                        <li>Create a robust Username and Password. Do not use easily guessable passwords.</li>
+                        <li>Check your email inbox for a <span class="highlight">6-digit OTP</span>. Enter this to finalize registration.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">2</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">Secure Login Procedures</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">To protect your financial history, we employ Bank-Grade OTP authentication mechanisms.</p>
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-3">
+                        <p class="text-blue-700 font-black text-xs uppercase tracking-widest mb-2">Recommended: OTP Login</p>
+                        <ul class="space-y-2 text-sm text-slate-700 font-semibold">
+                            <li>👉 Select "Login via Registered Email".</li>
+                            <li>👉 Input your registered Email and click <span class="highlight">Get Secure OTP</span>.</li>
+                            <li>👉 Enter the 6-digit OTP received in your inbox along with your 10-digit mobile number to access the vault.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">3</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">Understanding Your Dashboard</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">Your personalized dashboard contains three vital tracking sections:</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold">
+                        <li class="p-3 bg-rose-50 border border-rose-100 rounded-lg">🔴 <span class="text-rose-600 font-black">Pending Dues:</span> Any outstanding credit or unpaid invoices will be aggressively highlighted here in red.</li>
+                        <li class="p-3 bg-emerald-50 border border-emerald-100 rounded-lg">🟢 <span class="text-emerald-600 font-black">Payment History:</span> A complete, unalterable ledger of all your successful payments and past invoices.</li>
+                        <li class="p-3 bg-blue-50 border border-blue-100 rounded-lg">🔵 <span class="text-blue-600 font-black">Total Shopping:</span> A cumulative metric showing your lifetime expenditure at Patel Traders.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">4</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">Clearing Dues (Online Payment)</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">You can clear outstanding balances securely from anywhere without visiting the physical store.</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold list-disc list-inside">
+                        <li>Locate the specific invoice under Pending Dues and click the red <span class="text-rose-600 font-black">"PAY"</span> button.</li>
+                        <li>A secure gateway window will appear. Click <span class="highlight">"Pay via Razorpay"</span>.</li>
+                        <li>Select your preferred mode: UPI (GPay, PhonePe, Paytm), Credit Card, or Netbanking.</li>
+                        <li>Upon success, the invoice is instantly shifted to the Payment History tab, marked as 'PAID'.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">5</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">Downloading Encrypted Receipts</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">Your digital receipts are permanent and cannot be lost. Download them anytime for your records.</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold">
+                        <li>👉 <span class="highlight">Single Bill:</span> Click the "Get PDF" button next to any transaction. The exact digital receipt will be saved to your device.</li>
+                        <li>👉 <span class="highlight">Monthly Statement:</span> Need an account ledger? Select a specific Month/Year from the top menu and click 'Get PDF' to download a consolidated statement.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">6</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">Customer Support & Dispute Handling</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">In case of any discrepancies or technical issues, Patel Traders offers dedicated support.</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold list-disc list-inside">
+                        <li><span class="highlight">Double Debits:</span> If your account is debited twice due to network failure, report immediately via the official helpdesk number.</li>
+                        <li><span class="highlight">Refund Timelines:</span> Approved technical refunds are processed strictly within 7-10 working days.</li>
+                        <li><span class="highlight">Contact:</span> Store proprietor Sanjay Kumar Patel can be reached at +91 9565697314 during business hours.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">7</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">Standard Warranty & Return Policy</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">Important commercial policies every customer must be aware of prior to purchase.</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold list-disc list-inside">
+                        <li><span class="text-rose-600 font-black">AS-IS Sales:</span> Products are sold with absolutely zero warranty. Wood and plastic items are subject to natural wear and tear.</li>
+                        <li><span class="text-rose-600 font-black">No Returns:</span> Once physical delivery is taken and an invoice is generated, Patel Traders will not accept any returns or exchanges.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-circle" style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3); border-color: #fef3c7;">!</div>
+                <div class="info-box flex-grow border-amber-200 bg-amber-50">
+                    <h2 class="text-xl md:text-2xl font-black text-amber-600 mb-3">Critical Security Warnings</h2>
+                    <ul class="space-y-3 text-sm text-amber-800 font-semibold list-disc list-inside">
+                        <li><span class="warning-text text-amber-700">NEVER SHARE OTP:</span> Do not disclose your OTP to anyone. We will never ask for it.</li>
+                        <li><span class="warning-text text-amber-700">DIGITAL FORGERY:</span> Modifying PDF receipts (e.g., Photoshopping amounts) is a severe criminal offense. Our Cloud Database is the final truth.</li>
+                        <li><span class="warning-text text-amber-700">LOGOUT:</span> Always click your profile icon and 'Logout' after completing your session.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="content-hi" class="space-y-8 relative" style="display: none;">
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">1</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">नया अकाउंट कैसे बनाएं (Registration)</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">अगर आप पहली बार पटेल ट्रेडर्स के डिजिटल सिस्टम से जुड़ रहे हैं, तो आपको सबसे पहले अपना सुरक्षित अकाउंट बनाना होगा।</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold list-disc list-inside">
+                        <li>वेबसाइट खोलें और <span class="highlight">"Access Secure Vault"</span> बटन पर क्लिक करें।</li>
+                        <li>लॉगिन स्क्रीन पर <span class="highlight">"Register"</span> वाले टैब को चुनें।</li>
+                        <li>अपना पूरा नाम, सही ईमेल आईडी, और 10-अंकों का चालू मोबाइल नंबर सावधानी से डालें।</li>
+                        <li>सुरक्षा के लिए एक नया यूज़रनेम (Username) और मज़बूत पासवर्ड बनाएं।</li>
+                        <li>आपके ईमेल पर <span class="highlight">6-अंकों का OTP</span> आएगा, उसे डालकर वेरीफाई करें। आपका अकाउंट बन जाएगा।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">2</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">सुरक्षित लॉगिन कैसे करें (Secure Login)</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">आपके डेटा की सुरक्षा के लिए हमने बैंक जैसी OTP सिक्योरिटी लगाई है। आप बिना पासवर्ड याद रखे भी लॉगिन कर सकते हैं।</p>
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-3">
+                        <p class="text-blue-700 font-black text-xs uppercase tracking-widest mb-2">सबसे आसान तरीका (OTP Login)</p>
+                        <ul class="space-y-2 text-sm text-slate-700 font-semibold">
+                            <li>👉 "Login via Registered Email" विकल्प चुनें।</li>
+                            <li>👉 अपना रजिस्टर्ड ईमेल डालें और <span class="highlight">Get Secure OTP</span> पर क्लिक करें।</li>
+                            <li>👉 ईमेल पर आया OTP और अपना रजिस्टर्ड मोबाइल नंबर डालकर सीधे वॉल्ट में प्रवेश करें।</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">3</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">डैशबोर्ड को समझना (Your Vault)</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">लॉगिन करते ही आपके सामने 3 मुख्य हिस्से खुलेंगे जहाँ आपकी सारी जानकारी सुरक्षित है:</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold">
+                        <li class="p-3 bg-rose-50 border border-rose-100 rounded-lg">🔴 <span class="text-rose-600 font-black">Pending Dues:</span> अगर आपका कोई उधार या किश्त बाकी है, तो वह यहाँ लाल रंग में दिखेगा। इसे समय पर चुकाना अनिवार्य है।</li>
+                        <li class="p-3 bg-emerald-50 border border-emerald-100 rounded-lg">🟢 <span class="text-emerald-600 font-black">Payment History:</span> आपके द्वारा चुकाए गए सारे पुराने बिल और रसीदें यहाँ हमेशा के लिए सुरक्षित रहती हैं।</li>
+                        <li class="p-3 bg-blue-50 border border-blue-100 rounded-lg">🔵 <span class="text-blue-600 font-black">Total Shopping:</span> आज तक आपने कितने रुपये का सामान पटेल ट्रेडर्स से लिया है, यह सबसे ऊपर दिखता है।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">4</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">ऑनलाइन पेमेंट कैसे करें (Pay Dues)</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">अब आपको उधार चुकाने के लिए दुकान पर आने की ज़रूरत नहीं है। आप घर बैठे सुरक्षित पेमेंट कर सकते हैं।</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold list-disc list-inside">
+                        <li>Pending Dues लिस्ट में जिस बिल का पैसा देना है, उसके सामने लाल रंग के <span class="text-rose-600 font-black">"PAY"</span> बटन पर क्लिक करें।</li>
+                        <li>स्क्रीन पर अमाउंट दिखेगा। नीचे <span class="highlight">"Pay via Razorpay"</span> पर क्लिक करें।</li>
+                        <li>आप PhonePe, Google Pay, Paytm, या डेबिट/क्रेडिट कार्ड से पेमेंट कर सकते हैं।</li>
+                        <li>पेमेंट सफल होते ही, आपका बिल तुरंत 'PAID' हो जाएगा और हरी लिस्ट में चला जाएगा।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">5</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">रसीद डाउनलोड करना (Download PDF)</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">आपकी सारी पक्की रसीदें क्लाउड सर्वर पर सुरक्षित हैं। आप उन्हें कभी भी डाउनलोड कर सकते हैं।</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold">
+                        <li>👉 <span class="highlight">सिंगल बिल:</span> किसी भी बिल के सामने "Get PDF" बटन दबाएं। रसीद आपके फोन में सेव हो जाएगी।</li>
+                        <li>👉 <span class="highlight">मंथली स्टेटमेंट:</span> पूरे महीने का हिसाब चाहिए, तो ऊपर Month/Year चुनकर 'Get PDF' दबाएं। पूरा स्टेटमेंट एक साथ डाउनलोड हो जाएगा।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">6</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">ग्राहक सहायता और शिकायत (Support)</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">किसी भी तकनीकी समस्या या पेमेंट गड़बड़ी के मामले में पटेल ट्रेडर्स आपकी पूरी सहायता करेगा।</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold list-disc list-inside">
+                        <li><span class="highlight">डबल पेमेंट:</span> अगर सर्वर ख़राब होने के कारण पैसे दो बार कट जाते हैं, तो तुरंत हेल्पडेस्क नंबर पर सूचित करें।</li>
+                        <li><span class="highlight">रिफंड का समय:</span> सही पाए जाने पर एक्स्ट्रा पैसा 7-10 कार्य दिवसों के भीतर आपके बैंक खाते में वापस आ जाएगा।</li>
+                        <li><span class="highlight">संपर्क सूत्र:</span> प्रोपराइटर संजय कुमार पटेल से सीधे +91 9565697314 पर संपर्क किया जा सकता है।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-line"></div><div class="step-circle">7</div>
+                <div class="info-box flex-grow">
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-3">वारंटी और रिटर्न पॉलिसी (Warranty)</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 font-medium">सामान खरीदने से पहले इन व्यावसायिक नियमों को जानना बहुत ज़रूरी है।</p>
+                    <ul class="space-y-3 text-sm text-slate-600 font-semibold list-disc list-inside">
+                        <li><span class="text-rose-600 font-black">कोई गारंटी नहीं:</span> लकड़ी, प्लास्टिक या शीशे पर कोई वारंटी नहीं है। दुकान से माल निकलने के बाद टूट-फूट की हमारी कोई ज़िम्मेदारी नहीं होगी।</li>
+                        <li><span class="text-rose-600 font-black">नो रिटर्न पॉलिसी:</span> रसीद कटने और डिलीवरी होने के बाद कोई भी सामान वापस (Return) या बदला (Exchange) नहीं जाएगा।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative flex gap-5 md:gap-8">
+                <div class="step-circle" style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3); border-color: #fef3c7;">!</div>
+                <div class="info-box flex-grow border-amber-200 bg-amber-50">
+                    <h2 class="text-xl md:text-2xl font-black text-amber-600 mb-3">सुरक्षा नियम व कड़ी चेतावनी</h2>
+                    <ul class="space-y-3 text-sm text-amber-800 font-semibold list-disc list-inside">
+                        <li><span class="warning-text text-amber-700">OTP शेयर न करें:</span> अपना लॉगिन OTP किसी भी व्यक्ति या पटेल ट्रेडर्स के स्टाफ को भी न बताएं।</li>
+                        <li><span class="warning-text text-amber-700">रसीद से छेड़छाड़ अपराध है:</span> PDF रसीद को एडिट करके फर्जी 'PAID' बनाना एक गंभीर क़ानूनी अपराध है। हमारा सर्वर डेटा ही अंतिम सत्य माना जाएगा।</li>
+                        <li>काम खत्म होने के बाद अपनी प्रोफ़ाइल पर क्लिक करके <span class="warning-text text-amber-700">Logout</span> करना बिल्कुल न भूलें।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 pt-6 border-t border-slate-200 text-center">
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Official Document | Patel Traders, Kannauj (U.P.)</p>
+        </div>
+    </div>
+    <div class="paper-card p-6 md:p-8 mb-10 border-t-4 border-blue-500 shadow-lg">
+        <h3 id="txt-req-title" class="text-slate-800 font-black uppercase tracking-widest text-lg mb-2">📩 Get This Manual via Email</h3>
+        <p id="txt-req-sub" class="text-slate-500 text-sm font-semibold mb-6">Enter your details to receive this exact HD guide directly in your inbox.</p>
+        
+        <div id="welcome-msg" class="hidden mb-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 font-bold text-sm"></div>
+
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <input type="text" id="custName" placeholder="Enter Full Name" class="w-full md:w-1/2 bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-800 focus:outline-none focus:border-blue-500 transition font-bold placeholder-slate-400">
+            <input type="email" id="custEmail" placeholder="Enter Email Address" onblur="checkCustomerExistence()" class="w-full md:w-1/2 bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-800 focus:outline-none focus:border-blue-500 transition font-bold placeholder-slate-400">
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-4">
+            <button id="btnEmailManual" onclick="emailExactClonePDF()" class="btn-blue w-full md:w-1/2 justify-center">
+                <span id="btn-text">Email Me This Guide</span>
+                <div id="btn-loader" class="loader"></div>
+            </button>
+            <button onclick="downloadExactClonePDFLocally()" class="w-full md:w-1/2 py-4 bg-white hover:bg-slate-50 rounded-xl font-bold text-slate-600 uppercase tracking-widest transition flex items-center justify-center gap-2 border border-slate-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> <span id="btn-local">Download Locally</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // 🔗 YOUR GOOGLE APPS SCRIPT BACKEND URL
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGQleE1Mpq8ndheHZtM5wKt9DICVXI84vavz0W9We7rXCrURqP4crAV94EU5QilYfq/exec";
+    let currentLang = 'en';
+
+    function setLang(lang) {
+        currentLang = lang;
+        if(lang === 'hi') {
+            document.getElementById('btn-hi').className = "lang-btn lang-active";
+            document.getElementById('btn-en').className = "lang-btn lang-inactive";
+            document.getElementById('content-hi').style.display = "block";
+            document.getElementById('content-en').style.display = "none";
+            
+            document.getElementById('head-title').innerText = "कस्टमर यूज़र मैनुअल";
+            document.getElementById('head-sub').innerText = "डिजिटल सहायता केंद्र";
+            document.getElementById('head-desc').innerText = "पटेल ट्रेडर्स के सुरक्षित 'डिजिटल वॉल्ट' में आपका स्वागत है। इस सिस्टम को इस्तेमाल करने का पूरा और आसान तरीका नीचे स्टेप-बाय-स्टेप दिया गया है।";
+            
+            document.getElementById('txt-req-title').innerText = "📩 ईमेल पर मैनुअल प्राप्त करें";
+            document.getElementById('txt-req-sub').innerText = "यह हाई-क्वालिटी गाइड सीधे अपने इनबॉक्स में पाने के लिए विवरण दर्ज करें।";
+            document.getElementById('custName').placeholder = "पूरा नाम दर्ज करें";
+            document.getElementById('custEmail').placeholder = "ईमेल आईडी दर्ज करें";
+            
+            if(document.getElementById('btn-text').innerText.includes("Email") || document.getElementById('btn-text').innerText.includes("ईमेल")) {
+                 document.getElementById('btn-text').innerText = "मुझे यह गाइड ईमेल करें";
+            }
+            document.getElementById('btn-local').innerText = "फोन में डाउनलोड करें";
+        } else {
+            document.getElementById('btn-hi').className = "lang-btn lang-inactive";
+            document.getElementById('btn-en').className = "lang-btn lang-active";
+            document.getElementById('content-hi').style.display = "none";
+            document.getElementById('content-en').style.display = "block";
+            
+            document.getElementById('head-title').innerText = "Customer User Manual";
+            document.getElementById('head-sub').innerText = "Digital Assistance Center";
+            document.getElementById('head-desc').innerText = "Welcome to the Patel Traders Secure 'Digital Vault'. A comprehensive, step-by-step guide to operating your account is provided below.";
+            
+            document.getElementById('txt-req-title').innerText = "📩 Get This Manual via Email";
+            document.getElementById('txt-req-sub').innerText = "Enter your details to receive this exact HD guide directly in your inbox.";
+            document.getElementById('custName').placeholder = "Enter Full Name";
+            document.getElementById('custEmail').placeholder = "Enter Email Address";
+            
+            if(document.getElementById('btn-text').innerText.includes("ईमेल") || document.getElementById('btn-text').innerText.includes("Email")) {
+                 document.getElementById('btn-text').innerText = "Email Me This Guide";
+            }
+            document.getElementById('btn-local').innerText = "Download Locally";
+        }
+    }
+
+    // 🕵️ Check Customer in Database
+    async function checkCustomerExistence() {
+        const email = document.getElementById('custEmail').value.trim();
+        if(!email || !email.includes('@')) return;
+
+        try {
+            const response = await fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ type: "CHECK_CUSTOMER", email: email })
+            });
+            const result = await response.json();
+            
+            if(result.status === "EXISTS") {
+                const msgBox = document.getElementById('welcome-msg');
+                msgBox.innerHTML = `🌟 ${result.message}`; 
+                msgBox.classList.remove('hidden');
+                document.getElementById('custName').value = result.name; 
+                document.getElementById('btn-text').innerText = currentLang === 'hi' ? "पुनः ईमेल करें 🔄" : "Email Manual Again 🔄";
+            }
+        } catch (error) {
+            console.error("Database Check Failed", error);
+        }
+    }
+
+    // 🚀 OPTIMIZED HIGH-SPEED PDF ENGINE
+    async function generateCanvasPDFBase64() {
+        const elementToCapture = document.getElementById('pdf-capture-area');
+        
+        // SPEED HACK: Reduced scale slightly & turned off logging for 2x faster rendering
+        const canvas = await html2canvas(elementToCapture, { 
+            scale: 1.5, 
+            useCORS: true, 
+            logging: false, // Disables console spam, speeds up processing
+            backgroundColor: "#ffffff",
+            windowWidth: elementToCapture.scrollWidth,
+            windowHeight: elementToCapture.scrollHeight
+        });
+        
+        const imgData = canvas.toDataURL('image/jpeg', 0.95); // JPEG is faster and smaller than PNG
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const imgProps = pdf.getImageProperties(imgData);
+        const imgHeightInPdf = (imgProps.height * pdfWidth) / imgProps.width;
+        
+        let heightLeft = imgHeightInPdf;
+        let position = 0;
+
+        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInPdf, undefined, 'FAST');
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeightInPdf;
+            pdf.addPage();
+            pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInPdf, undefined, 'FAST');
+            heightLeft -= pageHeight;
+        }
+
+        return pdf.output('datauristring');
+    }
+
+    // 📩 ENGINE 1: SEND PDF VIA EMAIL
+    async function emailExactClonePDF() {
+        const name = document.getElementById('custName').value.trim();
+        const email = document.getElementById('custEmail').value.trim();
+        
+        if (!name || !email) {
+            alert(currentLang === 'hi' ? "कृपया नाम और ईमेल दोनों दर्ज करें।" : "Please enter both Name and Email.");
+            return;
+        }
+
+        const btn = document.getElementById('btnEmailManual');
+        const btnText = document.getElementById('btn-text');
+        const loader = document.getElementById('btn-loader');
+        
+        btn.disabled = true;
+        btnText.innerText = currentLang === 'hi' ? "स्कैनिंग जारी है..." : "Scanning Document...";
+        loader.style.display = "block";
+
+        try {
+            // 1. Generate FAST visual PDF
+            const base64PDF = await generateCanvasPDFBase64();
+
+            // 2. Send to Backend
+            btnText.innerText = currentLang === 'hi' ? "ईमेल भेजा जा रहा है..." : "Dispatching Email...";
+            
+            const response = await fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    type: "SEND_LEGAL_PDF",
+                    name: name,
+                    email: email,
+                    pdfData: base64PDF
+                })
+            });
+            
+            const result = await response.json();
+
+            if (result.status === "SUCCESS") {
+                btnText.innerText = currentLang === 'hi' ? "सफलतापूर्वक भेजा गया! ✅" : "Sent Successfully! ✅";
+                loader.style.display = "none";
+                btn.style.background = "#10b981"; // Turn Green
+                alert(currentLang === 'hi' ? `गाइड ${email} पर भेज दी गई है।` : `Guide emailed to ${email}.`);
+            } else {
+                throw new Error(result.message || result.error);
+            }
+
+        } catch (error) {
+            alert("Error: " + error.message);
+            btnText.innerText = currentLang === 'hi' ? "विफल। पुनः प्रयास करें" : "Failed. Try Again";
+            loader.style.display = "none";
+            btn.disabled = false;
+        }
+    }
+
+    // 📥 ENGINE 2: DOWNLOAD LOCALLY
+    async function downloadExactClonePDFLocally() {
+        const btn = document.querySelector('button[onclick="downloadExactClonePDFLocally()"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = currentLang === 'hi' ? "डाउनलोड हो रहा है..." : "Downloading...";
+        btn.disabled = true;
+
+        try {
+            const base64PDF = await generateCanvasPDFBase64();
+            const link = document.createElement('a');
+            link.href = base64PDF;
+            link.download = "Patel_Traders_User_Manual.pdf";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        } catch (error) {
+            alert("Error downloading PDF locally. Please try again.");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
